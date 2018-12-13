@@ -8,7 +8,7 @@ void main()
 	/*
 	mưa, nhiệt độ thấp, độ ẩm thấp, trời không có gió, mua cà phê			= 0
 	âm u, nhiệt độ bình thường, độ ẩm bình thường, trời có gió, mua trà		= 1
-	nắng, nhiệt độ cao, độ ẩm cao,nước trái cây								= 2
+	nắng, nhiệt độ cao, độ ẩm cao,nước trái cây					= 2
 	tạo bảng "thời tiết - nhiệt độ - độ ẩm - gió - thời tiết hôm trước" với nhãn là sản phẩm đc mua
 	*/
 	int arr[20][6] = {
@@ -40,7 +40,7 @@ void main()
 	string label[labelrange] = { "Ca phe","tra","nuoc trai cay"};
 	const int m1 = n; // kích thước mẫu
 	const double p1 = (1 / double(datarange)); // ước lượng tiền định
-	//test data: Đỏ, du lịch, trong nước tương ứng 1 0 1
+	//test data: nắng, nhiệt độ bình thường, độ ẩm cao, không gió, âm u tương ứng 2 1 2 0 1
 	int qu[5] = { 2, 1, 2, 0, 1 };
 	
 
