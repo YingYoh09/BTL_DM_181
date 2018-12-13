@@ -6,31 +6,42 @@ using namespace std;
 void main()
 {
 	/*
-	Vàng, du lịch, nhập, nữ			= 0
-	Đỏ, thể thao, trong nước, nam	= 1
-	tạo bảng theo thứ tự Màu xe - dòng xe - xuất xứ - người mua với nhãn là người mua
+	mưa, nhiệt độ thấp, độ ẩm thấp, trời không có gió, mua cà phê			= 0
+	âm u, nhiệt độ bình thường, độ ẩm bình thường, trời có gió, mua trà		= 1
+	nắng, nhiệt độ cao, độ ẩm cao,nước trái cây								= 2
+	tạo bảng "thời tiết - nhiệt độ - độ ẩm - gió - thời tiết hôm trước" với nhãn là sản phẩm đc mua
 	*/
-	int arr[10][4] = {
-		{ 1, 1, 1, 1 },
-		{ 1, 1, 1, 0 },
-		{ 1, 1, 1, 1 },
-		{ 0, 1, 1, 0 },
-		{ 0, 1, 0, 1 },
-		{ 0, 0, 0, 0 },
-		{ 0, 0, 0, 1 },
-		{ 0, 0, 1, 0 },
-		{ 1, 0, 0, 0 },
-		{ 1, 1, 0, 1 } };
+	int arr[20][6] = {
+		{2, 1, 0, 0, 0, 2},
+		{0, 0, 2, 0, 1, 1},
+		{0, 1, 0, 1, 1, 0},
+		{1, 1, 1, 1, 2, 0},
+		{0, 0, 1, 0, 1, 1},
+		{0, 1, 0, 0, 1, 1},
+		{1, 2, 1, 1, 1, 0},
+		{1, 0, 1, 1, 1, 2},
+		{1, 1, 0, 1, 1, 0},
+		{0, 2, 1, 0, 1, 2},
+		{1, 2, 0, 0, 0, 1},
+		{1, 2, 1, 0, 0, 1},
+		{0, 0, 0, 1, 1, 0},
+		{1, 0, 0, 0, 2, 2},
+		{0, 2, 2, 0, 1, 2},
+		{2, 1, 2, 0, 0, 2},
+		{2, 0, 2, 0, 1, 2},
+		{0, 1, 0, 0, 2, 1},
+		{1, 1, 1, 0, 1, 2},
+		{2, 1, 2, 0, 2, 0} };
 
-	int m = 10; //số đối tượng
-	const int labelrange = 2;	//số lượng các giá trị khác nhau của nhãn
-	const int datarange = 2;	//số lượng các giá trị khác nhau của đặc điểm
-	const int n = 3; //số lượng đặc điểm
-	string label[labelrange] = { "nu","nam" };
+	int m = 20; //số đối tượng
+	const int labelrange = 3;	//số lượng các giá trị khác nhau của nhãn
+	const int datarange = 3;	//số lượng các giá trị khác nhau của đặc điểm (max)
+	const int n = 5; //số lượng đặc điểm
+	string label[labelrange] = { "Ca phe","tra","nuoc trai cay"};
 	const int m1 = n; // kích thước mẫu
-	const float p1 = (1 / float(datarange)); // ước lượng tiền định
+	const double p1 = (1 / double(datarange)); // ước lượng tiền định
 	//test data: Đỏ, du lịch, trong nước tương ứng 1 0 1
-	int qu[3] = { 1, 0, 1 };
+	int qu[5] = { 2, 1, 2, 0, 1 };
 	
 
 	// mảng đếm số lượng các đặc điểm,  n ở đây là số đặc điểm
@@ -51,7 +62,7 @@ void main()
 		lab[labelrange]++;
 	}
 	//tìm p(đặc điểm | nhãn)
-	float p[datarange][labelrange][n];
+	double p[datarange][labelrange][n];
 	memset(p, 0, sizeof(p[0][0][0]) * datarange * labelrange * n);
 	for (int i = 0; i < datarange; i++) {
 		for (int j = 0; j < labelrange; j++) {
@@ -62,15 +73,16 @@ void main()
 	}
 	//khai báo v, tính P(label)
 	int ans = 0;
-	float v[labelrange];
+	double v[labelrange];
 	for (int i = 0; i < labelrange; i++) {
-		v[i] = lab[i] / float(lab[labelrange]);
+		v[i] = lab[i] / double(lab[labelrange]);
 	}
 	//tính v
 	for (int i = 0; i < labelrange; i++) {
 		for (int j = 0; j < n; j++) {
 			v[i] *= p[qu[j]][i][j];// p[qu[i]][i][j] tương ứng p[giá trị][nhãn][đặc điểm]
 		}
+		if (v[i] > v[ans]) ans = i;
 	}
 	//in ra kết quả
 	cout << "Predicting class of qu: " << label[ans];
