@@ -1,84 +1,83 @@
 ﻿#include <iostream>
 #include <string>
+#include<stdio.h>
 using namespace std;
 
 void main()
 {
-	const int m1 = 3; // kích thước mẫu
-	const float p1 = 0.5; // ước lượng tiền định
-	int m = 10; //số giá trị
-	int n = 4; //số lượng đặc điểm + số lượng nhãn
-	string label[2] = { "Nu","Nam" };
-	/* 
-		Đỏ, thể thao, trong nước, nam	= 1
-		Vàng, du lịch, nhập, nữ			= 0
-		tạo bảng theo thứ tự Màu xe - dòng xe - xuất xứ - người mua với nhãn là người mua
+	/*
+	Vàng, du lịch, nhập, nữ			= 0
+	Đỏ, thể thao, trong nước, nam	= 1
+	tạo bảng theo thứ tự Màu xe - dòng xe - xuất xứ - người mua với nhãn là người mua
 	*/
 	int arr[10][4] = {
-		{1, 1, 1, 1},
-		{1, 1, 1, 0},
-		{1, 1, 1, 1},
-		{0, 1, 1, 0},
-		{0, 1, 0, 1},
-		{0, 0, 0, 0},
-		{0, 0, 0, 1},
-		{0, 0, 1, 0},
-		{1, 0, 0, 0},
-		{1, 1, 0, 1} };
+		{ 1, 1, 1, 1 },
+		{ 1, 1, 1, 0 },
+		{ 1, 1, 1, 1 },
+		{ 0, 1, 1, 0 },
+		{ 0, 1, 0, 1 },
+		{ 0, 0, 0, 0 },
+		{ 0, 0, 0, 1 },
+		{ 0, 0, 1, 0 },
+		{ 1, 0, 0, 0 },
+		{ 1, 1, 0, 1 } };
 
-	//mảng đếm, với 3 là số lượng giá trị của nhãn + 1, 4 = n
-	int F[2][3][4]; // mảng đếm số lượng có giá trị 1
-	memset(F, 0, sizeof(F[0][0][0]) *2 * 3 * 4);
-	for (int i = 0; i < m; i++) {
-		for (int j = 0; j < n; j++) {
-			if (arr[i][j] == 1) {
-				F[1][arr[i][n - 1]][j] += 1;
-			}
-			else
-			{
-				F[0][arr[i][n - 1]][j] += 1;
-			}
-		}
-	}
-	F[1][0][n - 1] = F[0][0][n - 1]; F[0][1][n - 1] = F[1][1][n - 1];
-	for (int j = 0; j < n; j++) {
-		F[1][2][j] = F[1][0][j] + F[1][1][j];
-		F[0][2][j] = F[0][0][j] + F[0][1][j];
-	}
+	int m = 10; //số đối tượng
+	const int labelrange = 2;	//số lượng các giá trị khác nhau của nhãn
+	const int datarange = 2;	//số lượng các giá trị khác nhau của đặc điểm
+	const int n = 3; //số lượng đặc điểm
+	string label[labelrange] = { "nu","nam" };
+	const int m1 = n; // kích thước mẫu
+	const float p1 = (1 / float(datarange)); // ước lượng tiền định
 	//test data: Đỏ, du lịch, trong nước tương ứng 1 0 1
 	int qu[3] = { 1, 0, 1 };
-
-	//tìm p(đặc điểm | nhãn) cần tính
-	float p[2][2][4];
-	memset(p, 0, sizeof(p[0][0][0]) * 2 * 2 * 4);
-	for (int i = 0; i < 2; i++) {
-		for (int j = 0; j < n; j++) {
-			p[0][i][j] = (F[0][i][j] + m1*p1) / (F[0][2][j] + m1);
-			p[1][i][j] = (F[1][i][j] + m1*p1) / (F[1][2][j] + m1);
-		}
-	}
 	
-	//tính v, 2 là số giá trị của nhãn
-	float v[2] = { 1, 1 };
-	float sumv = 0;// v (nam) + v (nữ)
-	//v[1] v nam
-	v[1] *= p[0][1][3]; // p(Nam)
-	v[0] *= p[0][0][3]; // p(Nữ)
-	for (int j = 0; j < 2; j++) {
-		for (int i = 0; i < n - 1; i++) {
-			v[j] *= p[qu[i]][j][i]; // p[qu[i]][1][i] tương ứng p[đặc điểm][giới tính][cột]
+
+	// mảng đếm số lượng các đặc điểm,  n ở đây là số đặc điểm
+	int F[datarange][labelrange + 1][n]; 
+	memset(F, 0, sizeof(F[0][0][0]) * datarange * (labelrange + 1) * n);
+	//đếm số lượng các đặc điểm
+	for (int i = 0; i < m; i++) {
+		for (int j = 0; j < n; j++) {
+			F[arr[i][j]][arr[i][n]][j]++;//đếm từng đặc điểm
+			F[arr[i][j]][labelrange][j]++;//sum
 		}
-		sumv += v[j];
 	}
-	//p(d | nam/ nữ) và tìm p(d|) max
-	float pd[2];
+	//đếm số lượng các nhãn có giá trị ....
+	int lab[labelrange + 1];
+	memset(lab, 0, sizeof(lab[0]) * (labelrange + 1));
+	for (int i = 0; i < m; i++) {
+		lab[arr[i][n]]++;
+		lab[labelrange]++;
+	}
+	//tìm p(đặc điểm | nhãn)
+	float p[datarange][labelrange][n];
+	memset(p, 0, sizeof(p[0][0][0]) * datarange * labelrange * n);
+	for (int i = 0; i < datarange; i++) {
+		for (int j = 0; j < labelrange; j++) {
+			for (int k = 0; k < n; k++) {
+				p[i][j][k] = (F[i][j][k] + m1*p1) / (F[i][labelrange][k] + m1);
+			}
+		}
+	}
+	//khai báo v, tính P(label)
 	int ans = 0;
-	for (int i = 0; i < 2; i++) {
-		pd[i] = v[i] / sumv;
-		if (pd[i] > pd[ans]) ans = i;
+	float v[labelrange];
+	for (int i = 0; i < labelrange; i++) {
+		v[i] = lab[i] / float(lab[labelrange]);
+	}
+	//tính v
+	for (int i = 0; i < labelrange; i++) {
+		for (int j = 0; j < n; j++) {
+			v[i] *= p[qu[j]][i][j];// p[qu[i]][i][j] tương ứng p[giá trị][nhãn][đặc điểm]
+		}
 	}
 	//in ra kết quả
 	cout << "Predicting class of qu: " << label[ans];
+	for (int i = ans + 1; i < 2; i++) {
+		if (v[i] == v[ans]) {
+			cout << " or " << label[i];
+		}
+	}
 	getchar();
 }
-
