@@ -86,7 +86,7 @@ void main()
 	}
 	//in ra kết quả
 	cout << "Predicting class of qu: " << label[ans];
-	for (int i = ans + 1; i < 2; i++) {
+	for (int i = ans + 1; i < labelrange; i++) {
 		if (v[i] == v[ans]) {
 			cout << " or " << label[i];
 		}
