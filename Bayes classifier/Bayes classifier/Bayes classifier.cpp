@@ -12,40 +12,40 @@ void main()
 	tạo bảng "thời tiết - nhiệt độ - độ ẩm - gió - thời tiết hôm trước" với nhãn là sản phẩm đc mua
 	*/
 	int arr[20][6] = {
-		{2, 1, 0, 0, 0, 2},
-		{0, 0, 2, 0, 1, 1},
-		{0, 1, 0, 1, 1, 0},
-		{1, 1, 1, 1, 2, 0},
-		{0, 0, 1, 0, 1, 1},
-		{0, 1, 0, 0, 1, 1},
-		{1, 2, 1, 1, 1, 0},
-		{1, 0, 1, 1, 1, 2},
-		{1, 1, 0, 1, 1, 0},
-		{0, 2, 1, 0, 1, 2},
-		{1, 2, 0, 0, 0, 1},
-		{1, 2, 1, 0, 0, 1},
-		{0, 0, 0, 1, 1, 0},
-		{1, 0, 0, 0, 2, 2},
-		{0, 2, 2, 0, 1, 2},
-		{2, 1, 2, 0, 0, 2},
-		{2, 0, 2, 0, 1, 2},
-		{0, 1, 0, 0, 2, 1},
-		{1, 1, 1, 0, 1, 2},
-		{2, 1, 2, 0, 2, 0} };
+		{ 2, 1, 0, 0, 0, 2 },
+		{ 0, 0, 2, 0, 1, 1 },
+		{ 0, 1, 0, 1, 1, 0 },
+		{ 1, 1, 1, 1, 2, 0 },
+		{ 0, 0, 1, 0, 1, 1 },
+		{ 0, 1, 0, 0, 1, 1 },
+		{ 1, 2, 1, 1, 1, 0 },
+		{ 1, 0, 1, 1, 1, 2 },
+		{ 1, 1, 0, 1, 1, 0 },
+		{ 0, 2, 1, 0, 1, 2 },
+		{ 1, 2, 0, 0, 0, 1 },
+		{ 1, 2, 1, 0, 0, 1 },
+		{ 0, 0, 0, 1, 1, 0 },
+		{ 1, 0, 0, 0, 2, 2 },
+		{ 0, 2, 2, 0, 1, 2 },
+		{ 2, 1, 2, 0, 0, 2 },
+		{ 2, 0, 2, 0, 1, 2 },
+		{ 0, 1, 0, 0, 2, 1 },
+		{ 1, 1, 1, 0, 1, 2 },
+		{ 2, 1, 2, 0, 2, 0 } };
 
 	int m = 20; //số đối tượng
 	const int labelrange = 3;	//số lượng các giá trị khác nhau của nhãn
 	const int datarange = 3;	//số lượng các giá trị khác nhau của đặc điểm (max)
 	const int n = 5; //số lượng đặc điểm
-	string label[labelrange] = { "Ca phe","tra","nuoc trai cay"};
+	string label[labelrange] = { "Ca phe","tra","nuoc trai cay" };
 	const int m1 = n; // kích thước mẫu
 	const double p1 = (1 / double(datarange)); // ước lượng tiền định
 	//test data: nắng, nhiệt độ bình thường, độ ẩm cao, không gió, âm u tương ứng 2 1 2 0 1
 	int qu[5] = { 2, 1, 2, 0, 1 };
-	
+
 
 	// mảng đếm số lượng các đặc điểm,  n ở đây là số đặc điểm
-	int F[datarange][labelrange + 1][n]; 
+	int F[datarange][labelrange + 1][n];
 	memset(F, 0, sizeof(F[0][0][0]) * datarange * (labelrange + 1) * n);
 	//đếm số lượng các đặc điểm
 	for (int i = 0; i < m; i++) {
@@ -85,6 +85,10 @@ void main()
 		if (v[i] > v[ans]) ans = i;
 	}
 	//in ra kết quả
+	for (int i = 0; i < labelrange; i++) {
+		cout << "v[" << label[i] << "] = " << v[i] << endl;
+	}
+
 	cout << "Predicting class of qu: " << label[ans];
 	for (int i = ans + 1; i < labelrange; i++) {
 		if (v[i] == v[ans]) {
